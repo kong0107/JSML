@@ -4,51 +4,76 @@
  * @param {JsonElement} jsml - The only key is the tag name to be created, and the value is an object describing its properties and children.
  * @returns {Element}
  */
-function createElement(jsml) {
-    if(typeof jsml === "string") return document.createTextNode(object);
+export function createElement(jsml) {
+    if(typeof jsml === "string") return document.createTextNode(jsml);
     let tag = jsml.tag;
     if(!tag) {
         tag = Object.keys(jsml)[0];
+        if(!tag) return;
         jsml = jsml[tag];
     }
     const elem = document.createElement(tag);
+    if(typeof jsml === "string") jsml = {text: jsml};
     for(let prop in jsml) {
         const value = jsml[prop];
         prop = prop.toLowerCase();
-        if(prop.startsWith("on")) elem.addEventListener(prop.substring(2), value);
-        else switch(prop) { // lowercased alphabetic order
-            case "$":
-            case "children": // value: JsonElement[]
-                elem.append(...value.map(createElement));
-                break;
+        if(prop.startsWith("on"))
+            elem.addEventListener(prop.substring(2), toFunc(value));
+        else switch(prop) {
+            case ".":
             case "class":
-            case "classname": // value: string | string[]
-                elem.className = (typeof value === "string") ? value : value.join(" ");
+            case "classname": { // value: string | string[]
+                const list = (typeof value === "string") ? value.split(" ") : value;
+                elem.classList.add(...(list.filter(x => x)));
                 break;
-            case "data":
-            case "dataset": // value: Object whose values are strings
-                for(let ds in value) elem.dataset[ds] = value[ds];
-                break;
-            case "listeners": // value: Object whose values are functions
-                for(let eventType in value) elem.addEventListener(eventType, value[eventType]);
-                break;
-            case "style": // value: string | Object
+            }
+            case "css":
+            case "style": { // value: string | Object
                 if(typeof value == "string") elem.style.cssText = value;
-                else for(let sp in value) elem.style[sp] = value[sp];
+                else for(let sp in value) elem.style[camelize(sp)] = value[sp];
                 break;
+            }
             case "!":
-            case "text": // value: string
+            case "text": { // value: string
                 elem.append(value);
                 break;
-            default: // value: string
-                assert(typeof value === "string");
+            }
+            case "#": { // value: string
+                elem.id = value;
+                break;
+            }
+            case "$":
+            case "children": { // value: JsonElement[]
+                elem.append(...value.map(createElement));
+                break;
+            }
+            case "data":
+            case "dataset": { // value: Object whose values are strings
+                for(let ds in value) elem.dataset[camelize(ds)] = value[ds];
+                break;
+            }
+            case "listeners": { // value: Object whose values are functions
+                for(let event in value)
+                    elem.addEventListener(event, toFunc(value[event]));
+                break;
+            }
+            default: { // value: string
+                console.assert(typeof value === "string");
                 elem.setAttribute(prop, value);
+            }
         }
     }
     return elem;
 };
 
-export default createElement;
+export function parseFromHTML(html) {}
+
+export default {createElement, parseFromHTML};
+
+
+/******** Private Functions ********/
+const camelize = str => str.replace(/-([a-z])/g, m => m[1].toUpperCase());
+const toFunc = any => (any instanceof Function) ? any : new Function(any);
 
 
 /******** Definitions ********/

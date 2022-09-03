@@ -39,7 +39,7 @@ This could be represented by:
         {td: {$: [{
             a: {
                 href: "#",
-                onclick: () => alert("QQ"),
+                onClick: () => alert(1069),
                 text: "a link"
             }
         }]}},
@@ -55,8 +55,8 @@ This could be represented by:
 ]}}
 ```
 
-`"$"` means children, and `"!"` means text.
-For ideas of this format, see [context](context.md);
+For ideas of this format and even shorter implementation, see [context](context.md).
+
 
 ## fyi
 In browsers that supports JavaScript:

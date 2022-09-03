@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSML: JSON that represents HTML</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<script type="module" src="demo.js"></script>
+</head>
+<body class="container">
+<h1>JSML: <em>JS</em>ON that represents HT<em>ML</em></h1>
+<main class="row">
+    <section class="col-lg-5 mb-4">
+        <h2><label for="textarea">Input JSML</label></h2>
+        <textarea id="textarea" class="w-100">
+            {"button": {
+                "type": "button",
+                "class": ["btn", "btn-primary"],
+                "className": "small d-inline-block",
+                "css": "border-radius: 50%; color: black;",
+                "style": {
+                    "marginTop": "1em",
+                    "paddingBottom": "1px"
+                },
+                "data": {
+                    "camelCase": "uwu",
+                    "kebab-case": "wow"
+                },
+                "data-foo-bar": "2000",
+                "onClick": "alert(1069)",
+                "listeners": {
+                    "click": "alert(this)"
+                },
+                "text": "Hohoho"
+            }}
+        </textarea>
+        <div id="status"></div>
+    </section>
+    <section class="col-lg-3 mb-4">
+        <h2>Element created</h2>
+        <div id="element">B</div>
+    </section>
+    <section class="col-lg-4 mb-4">
+        <h2>HTML</h2>
+        <code id="html" class="d-block w-100">C</code>
+    </section>
+</main>
+</body>
+</html>

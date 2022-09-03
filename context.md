@@ -121,7 +121,7 @@ Let's destruct `attributes` and assign the content to its containing object. Thi
     "tag": "a",
     "id": "myLink",
     "href": "#",
-    "title": "the title"
+    "title": "the title",
     "children": [
         "foo",
         {
@@ -178,12 +178,12 @@ Here it comes:
 {"a": {
     "id": "myLink",
     "href": "#",
-    "title": "the title"
+    "title": "the title",
     "children": [
         "foo",
         {"em": {
             "children": ["bar"]
-        },
+        }},
         "2000"
     ]
 }}
@@ -195,7 +195,7 @@ Nice! Now the notation is short and like the HTML code it represents.
 
 Let's use another property name `"$"` to represent children. This have the following pros:
 1. shorter in JSON
-2. no need to be quoted in JS as a object key name
+2. no need to be quoted in JS as a object property name
 3. there would not have conflict with any attribute name (since it's illegal in XML to use this character in attribute name).
 
 ```js
@@ -238,13 +238,13 @@ It is common for an element to have only plain text inside. So instead of
 {"em": {
     "class": "my-class",
     "children": ["bar"]
-}
+}}
 ```
 
 Let's try to simplify it into:
 
 ```js
-{"em" {
+{"em": {
     "class": "my-class",
     "text": "bar"
 }} // 4.1
@@ -253,7 +253,7 @@ Let's try to simplify it into:
 Hmm... maybe shorter:
 
 ```js
-{"em" {
+{"em": {
     "class": "my-class",
     "!": "bar"
 }} // 4.2
@@ -307,29 +307,79 @@ Consider a HTML element:
     class="btn btn-primary"
     style="margin-top: 1em; padding-bottom: 1px"
     data-foo-bar="2000"
-    onclick="alert(1069); console.debug(this);"
+    data-abc-def="ghi"
+    onclick="alert(1069); alert(this);"
 >Hohoho</button>
 ```
 
-This could be described by JSON like:
+This could be created by passing an object like:
 
 ```js
 {button: {
     type: "button",
     class: ["btn", "btn-primary"],
+    className: "small d-inline-block",
+    style: {
+        marginTop: "1em",
+        paddingBottom: "1px"
+    },
+    data: {
+        fooBar: "2000"
+    },
+    "data-abc-def": "ghi",
     onClick: () => alert(1069),
     listeners: {
-        click: function(){console.debug(this)}
-    }
+        click: function(){alert(this)}
+    },
     text: "Hohoho"
 }}
 ```
 
+To transfer it in JSON, functions shall be written in string:
+
+```js
+{"button": {
+    "type": "button",
+    "class": ["btn", "btn-primary"],
+    "className": "small d-inline-block",
+    "style": {
+        "marginTop": "1em",
+        "paddingBottom": "1px"
+    },
+    "data": {
+        "fooBar": "2000"
+    },
+    "data-abc-def": "ghi",
+    "onClick": "alert(1069)",
+    "listeners": {
+        "click": "alert(this)"
+    },
+    "text": "Hohoho"
+}}
+```
+
 CSS class, styles, dataset, and listeners cannot be assigned either by `Element.setAttribute(attrName, value)` or `element[attrName]`.
-Each has its own way to be assigned. See `index.js` for details.
+Each has its ways to be assigned:
+
+* CSS classes:
+  Both `class` and `className` can be used as the property name (while React supports `className` only).
+  Both single string and array of strings are supported.
+  If using single string form, each CSS class shall be *seperated by space*.
+* CSS styles:
+  It's ok to assign properties list as a string (each property-value pair *seperated by comma*, like `style` attribute in HTML), with each property name in *kebab-case*;
+  but if you wanna assign it as an object, property name shall be in *lowerCamelCase*.
+* Dataset:
+  As it's shown in the above example, assigning data as an attribute is allowed with the property name in `kebab-case`;
+  and assigning it through an object is also supported, but with property name in *lowerCamelCase*.
+  Don't blame on me about this confusing situation, see [MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset).
+* Event listeners:
+  Each of `onClick`, `onclick` and `listeners: {click}` is OK to assign listeners.
+  In JS these can be functions, but strings will be deserialized if assigned to listeners. You shall be care of scoping issues in this case.
 
 And since these implementation is only for HTML, the worry about conflict between object property name and XML attribute is ignored.
 Therefore, the final code still recognize `"tag"`, `"children"`, `"text"` and does not treat them as HTML attributes.
 
+See `index.js` for actual code.
+
 ## parse DOM to JSON
-tbe
+TBE
