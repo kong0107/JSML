@@ -40,7 +40,7 @@ This could be represented by:
             a: {
                 href: "#",
                 onclick: () => alert("QQ"),
-                "!": "a link"
+                text: "a link"
             }
         }]}},
         {td: {$: [{

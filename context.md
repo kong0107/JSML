@@ -247,7 +247,7 @@ Let's try to simplify it into:
 {"em" {
     "class": "my-class",
     "text": "bar"
-}}
+}} // 4.1
 ```
 
 Hmm... maybe shorter:
@@ -256,13 +256,13 @@ Hmm... maybe shorter:
 {"em" {
     "class": "my-class",
     "!": "bar"
-}} // 4.1
+}} // 4.2
 ```
 
 If there's no attributes, the following is wonderful:
 
 ```js
-{"em": "bar"} // 4.2
+{"em": "bar"} // 4.3
 ```
 
 Parser:
@@ -272,7 +272,7 @@ function createElement(jsml) {
     if(typeof jsml === "string") return jsml;
     const tag = Object.keys(jsml)[0];
     const elem = document.createElement(tag);
-    if(typeof jsml === "string") { // 4.2
+    if(typeof jsml === "string") { // 4.3
         elem.append(jsml);
         return elem;
     }
@@ -281,7 +281,8 @@ function createElement(jsml) {
             case "$":
                 elem.append(...jsml.$.map(createElement);
                 break;
-            case "!": // 4.1
+            case "text": // 4.1
+            case "!": // 4.2
                 elem.append(jsml.["!"]);
                 break;
             default:
@@ -292,16 +293,43 @@ function createElement(jsml) {
 }
 ```
 
-Note that `"!"` shall be quoted and cannot be used as `jsml.!`.
-However it's still safe to distinquish from XML attributes.
+For safety in XML (not to conflict with XML attribute name), using `"!"` as property name seems to be an option.
+However, this may confuse people who do not know such meaning.
 
 
 ### Phase 5: special attributes
 
-Usually attributes can be assigned by both `Element.setAttribute(attrName, value)` and `element[attrName]`.
-But that's not the case for CSS class, styles, dataset, and listeners.
-So that would be implement in other ways.
-Please see the final code in the file.
+Consider a HTML element:
+
+```html
+<button
+    type="button"
+    class="btn btn-primary"
+    style="margin-top: 1em; padding-bottom: 1px"
+    data-foo-bar="2000"
+    onclick="alert(1069); console.debug(this);"
+>Hohoho</button>
+```
+
+This could be described by JSON like:
+
+```js
+{button: {
+    type: "button",
+    class: ["btn", "btn-primary"],
+    onClick: () => alert(1069),
+    listeners: {
+        click: function(){console.debug(this)}
+    }
+    text: "Hohoho"
+}}
+```
+
+CSS class, styles, dataset, and listeners cannot be assigned either by `Element.setAttribute(attrName, value)` or `element[attrName]`.
+Each has its own way to be assigned. See `index.js` for details.
+
+And since these implementation is only for HTML, the worry about conflict between object property name and XML attribute is ignored.
+Therefore, the final code still recognize `"tag"`, `"children"`, `"text"` and does not treat them as HTML attributes.
 
 ## parse DOM to JSON
 tbe
