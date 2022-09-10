@@ -6,36 +6,60 @@
 <title>JSML: JSON that represents HTML</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="index.js"></script>
+<style>
+    #textarea {
+        max-height: 60vh;
+    }
+    h2 {
+        border: dashed #ccc;
+        border-width: 2px 0 0 2px;
+        padding: .2em;
+    }
+</style>
 </head>
 <body class="container">
 <header>
     <h1>JSML: <em>JS</em>ON that represents HT<em>ML</em></h1>
-    <p><a href="https://github.com/kong0107/jsml">source code</a></p>
 </header>
 <main class="row h-100">
     <section class="col-lg-5 mb-4">
         <h2><label for="textarea">Input JSML</label></h2>
         <textarea id="textarea" class="w-100 font-monospace">
-            {button: {
-                type: "button",
-                class: ["btn", "btn-primary"],
-                className: "small d-inline-block",
-                css: "border-radius: 50%; color: black;",
-                style: {
-                    marginTop: "1em",
-                    paddingBottom: "1px"
-                },
-                data: {
-                    camelCase: "uwu",
-                    "kebab-case": "wow"
-                },
-                "data-foo-bar": "2000",
-                onClick: "console.log('by string', onclick, event.target)",
-                listeners: {
-                    click: function() {console.log("by function", this);}
-                },
-                text: "Hohoho"
-            }}
+            {div: {$: [
+                {p: {
+                    class: "myClass myClass2",
+                    style: "margin: .5em 0; padding: 0.5em;",
+                    $: [
+                        "JSML means ",
+                        {a: {
+                            href: "https://www.json.org/",
+                            text: "JSON"
+                        }},
+                        " that represents ",
+                        {em: "HTML"}
+                    ]
+                }},
+                {button: {
+                    type: "button",
+                    class: ["btn", "btn-primary"],
+                    className: "small d-inline-block",
+                    css: "border-radius: 50%; color: black;",
+                    style: {
+                        marginTop: "1em",
+                        paddingBottom: "1px"
+                    },
+                    data: {
+                        camelCase: "uwu",
+                        "kebab-case": "wow"
+                    },
+                    "data-foo-bar": "2000",
+                    onClick: "console.log('by string', onclick, event.target)",
+                    listeners: {
+                        click: function() {console.log("by function", this);}
+                    },
+                    text: "Hohoho"
+                }}
+            ]}}
         </textarea>
         <div id="statusx"></div>
     </section>
@@ -48,6 +72,10 @@
         <code id="html" class="d-block font-monospace">C</code>
     </section>
 </main>
+<footer class="d-flex justify-content-between">
+    <p>JavaScript Object Notation that represents HyperText Markup Language</p>
+    <p><a href="https://github.com/kong0107/jsml">source code</a></p>
+</footer>
 <script>
 ["textarea", "statusx", "element", "html"]
 .map(id => window[id] = document.getElementById(id));
