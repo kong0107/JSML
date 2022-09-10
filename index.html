@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JSML: JSON that represents HTML</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script type="module" src="demo.js"></script>
+<script src="index.js"></script>
 </head>
 <body class="container">
 <h1>JSML: <em>JS</em>ON that represents HT<em>ML</em></h1>
 <main class="row">
     <section class="col-lg-5 mb-4">
         <h2><label for="textarea">Input JSML</label></h2>
-        <textarea id="textarea" class="w-100">
+        <textarea id="textarea" class="w-100 font-monospace">
             {"button": {
                 "type": "button",
                 "class": ["btn", "btn-primary"],
@@ -42,8 +42,33 @@
     </section>
     <section class="col-lg-4 mb-4">
         <h2>HTML</h2>
-        <code id="html" class="d-block w-100">C</code>
+        <code id="html" class="d-block font-monospace">C</code>
     </section>
 </main>
+<script>
+["textarea", "status", "element", "html"]
+.map(id => window[id] = document.getElementById(id));
+
+textarea.addEventListener("input", event => {
+    textarea.style.height = (textarea.value.split(/\n/).length * 1.5 + .5) + "em";
+    while(element.lastChild?.remove());
+    status.lastChild?.remove();
+    html.lastChild?.remove();
+    try {
+        const obj = JSON.parse(event.target.value);
+        const elem = JSML.createElement(obj);
+        console.debug(elem);
+        if(!elem) return;
+        element.append(elem);
+        html.textContent = elem.outerHTML;
+    }
+    catch(err) {
+        status.textContent = err;
+    }
+});
+
+textarea.value = textarea.value.trim().replace(/\n {12}/g, "\n");
+textarea.dispatchEvent(new InputEvent("input"));
+</script>
 </body>
 </html>

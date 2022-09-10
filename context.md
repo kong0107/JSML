@@ -107,9 +107,13 @@ function createElement(jsml) {
 }
 ```
 
-(You should know [destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) and [rest parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters) in ES6 to understand this code.)
+Prior knowledge for the JS code:
+* [destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
+* [rest parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters)
+* [content versus IDL attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#content_versus_idl_attributes)
+
 Though clear enough and easy to know the depth of each descendant,
-I still hope we can make the code shorter.
+I still hope we can make the JSON string shorter.
 
 
 ### Phase 2: we don't need the name "attributes"
@@ -375,6 +379,9 @@ Each has its ways to be assigned:
 * Event listeners:
   Each of `onClick`, `onclick` and `listeners: {click}` is OK to assign listeners.
   In JS these can be functions, but strings will be deserialized if assigned to listeners. You shall be care of scoping issues in this case.
+  See also:
+  * [Event listing | MDN](https://developer.mozilla.org/en-US/docs/Web/Events#event_listing)
+  * [Event handler attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#content_versus_idl_attributes)
 
 And since these implementation is only for HTML, the worry about conflict between object property name and XML attribute is ignored.
 Therefore, the final code still recognize `"tag"`, `"children"`, `"text"` and does not treat them as HTML attributes.

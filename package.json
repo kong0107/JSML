@@ -1,0 +1,29 @@
+{
+  "name": "jsml-parser",
+  "version": "0.1.0",
+  "description": "JSON that represents HTML",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kong0107/jsml.git"
+  },
+  "keywords": [
+    "jsml",
+    "json",
+    "html",
+    "dom",
+    "browser"
+  ],
+  "author": "kong0107",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/kong0107/jsml/issues"
+  },
+  "homepage": "https://github.com/kong0107/jsml#readme",
+  "devDependencies": {
+    "jsdom": "^20.0.0"
+  }
+}

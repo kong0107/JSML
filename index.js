@@ -1,15 +1,19 @@
+/** @module JSML */
+const JSML = (() => {
+
 /**
  * @func createElement
  * @desc Create HTML Element from a serializable object.
- * @param {JsonElement} jsml - The only key is the tag name to be created, and the value is an object describing its properties and children.
+ * @param {JsonElement} jsml
+ * @param {HTMLDocument} [document=window.document] - you could use `jsdom`
  * @returns {Element}
  */
-export function createElement(jsml) {
+function createElement(jsml, document = window.document) {
     if(typeof jsml === "string") return document.createTextNode(jsml);
     let tag = jsml.tag;
     if(!tag) {
         tag = Object.keys(jsml)[0];
-        if(!tag) return;
+        if(!tag) throw TypeError("object does not match JsonElement structure.");
         jsml = jsml[tag];
     }
     const elem = document.createElement(tag);
@@ -18,7 +22,7 @@ export function createElement(jsml) {
         const value = jsml[prop];
         prop = prop.toLowerCase();
         if(prop.startsWith("on"))
-            elem.addEventListener(prop.substring(2), toFunc(value));
+            elem.addEventListener(prop.substring(2), toFunc(value, prop));
         else switch(prop) {
             case ".":
             case "class":
@@ -44,7 +48,7 @@ export function createElement(jsml) {
             }
             case "$":
             case "children": { // value: JsonElement[]
-                elem.append(...value.map(createElement));
+                elem.append(...value.map(o => createElement(o, document)));
                 break;
             }
             case "data":
@@ -54,34 +58,75 @@ export function createElement(jsml) {
             }
             case "listeners": { // value: Object whose values are functions
                 for(let event in value)
-                    elem.addEventListener(event, toFunc(value[event]));
+                    elem.addEventListener(event, toFunc(value[event], `on${event}`));
                 break;
             }
             default: { // value: string
-                console.assert(typeof value === "string");
+                console.assert(typeof value === "string", new TypeError("attribute value must be a string"));
                 elem.setAttribute(prop, value);
             }
         }
     }
     return elem;
+}
+
+/**
+ * @func toHTML
+ * @desc (not implemented yet) Convert JSML object to HTML string without document object.
+ * @param {string} jsml
+ * @returns {string}
+ */
+function toHTML(jsml) {
+
+}
+
+/**
+ * @func camelize
+ * @desc Convert kebab-case string to camelCase.
+ * @param {string} kebab
+ * @returns {string}
+ */
+const camelize = kebab => kebab.replace(/-([a-z])/g, m => m[1].toUpperCase());
+
+/**
+ * @func toFunc
+ * @desc Convert a string to a listener function
+ * @param {string | Function} any - if a function is passed in, then it's returned unchanged.
+ * @param {string} [name=anonymous] - could be used to recursive call itself
+ * @returns {Function} function
+ *
+ * [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#content_versus_idl_attributes) says:
+ * All event handler attributes accept a string.
+ * The string will be used to synthesize a JavaScript function like `function name(...args) {body}`,
+ * where `name` is the attribute's name, and `body` is the attribute's value.
+ * The handler receives the same parameters as its JavaScript event handler counterpart
+ * — most handlers receive only one `event` parameter,
+ * while `onerror` receives five: `event`, `source`, `lineno`, `colno`, `error`.
+ */
+const toFunc = (any, name = "anonymous") => (any instanceof Function) ? any : (
+    Function(`return function ${name}(event) { ${any} }`)()
+);
+
+
+return {
+    createElement,
+    // toHTML,
+    camelize, toFunc
 };
 
-export function parseFromHTML(html) {}
+})();
 
-export default {createElement, parseFromHTML};
+if(typeof module === "object" && module.exports) module.exports = JSML;
 
 
-/******** Private Functions ********/
-const camelize = str => str.replace(/-([a-z])/g, m => m[1].toUpperCase());
-const toFunc = any => (any instanceof Function) ? any : new Function(any);
 
 
 /******** Definitions ********/
 
 /**
  * @typedef {Object | string} JsonElementCore
- * @property {string} [tag] - HTML tag. Only omittable if using `JsonElementX`.
- * @property {JsonElementX[]} [children]
+ * @property {string} [tag] - HTML tag. Only omittable if using `JsonElement`.
+ * @property {JsonElement[]} [children]
  * @property {string} [text] - use this only if the only child is text.
  * @property {string | string[]} [class]     - CSS classes to be assigned.
  * @property {string | string[]} [className] - CSS classes to be assigned.
@@ -104,17 +149,17 @@ const toFunc = any => (any instanceof Function) ? any : new Function(any);
  * [computed property name]{@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#computed_property_names}.
  *
  * @example /// anchor link
-    {tag: "a", href: "#", text: "my link"} /// JsonElement
-    {a: {href: "#", text: "my link"}}      /// JsonElementX
+    {tag: "a", href: "#", text: "my link"} /// JsonElementCore
+    {a: {href: "#", text: "my link"}}      /// JsonElement
 
  * @example /// line break
-    {tag: "br"} /// JsonElement
-    {br: {}}    /// JsonElementX
+    {tag: "br"} /// JsonElementCore
+    {br: {}}    /// JsonElement
 
  * @example /// simple header
-    {tag: "h1", children: ["my header"]} /// JsonElement
-    {tag: "h1", text: "my header"}       /// JsonElement
-    {h1: "my header"}                    /// JsonElementX
+    {tag: "h1", children: ["my header"]} /// JsonElementCore
+    {tag: "h1", text: "my header"}       /// JsonElementCore
+    {h1: "my header"}                    /// JsonElement
 
  * @example /// table row with multiple cells
     {tr: {children: [
@@ -137,4 +182,5 @@ const toFunc = any => (any instanceof Function) ? any : new Function(any);
             "clicking this also triggers click event of the checkbox"
         ]
     }}
+ *
  */
