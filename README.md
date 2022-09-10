@@ -8,8 +8,7 @@
 ### in browsers
 
 ```html
-<!-- <script src="https://cdn.jsdelivr.net/npm/jsml-parser/index.js"></script> -->
-<script src="https://cdn.jsdelivr.net/gh/kong0107/jsml/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsml-parser/index.js"></script>
 <script>
     const jsml =
     {p: {
