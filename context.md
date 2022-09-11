@@ -61,13 +61,13 @@ However, in the following cases, using `JSX` or `React.createElement()` would no
 
 ## JSON that represents HTML
 
-A HTML element comprises three parts:
+An HTML element comprises three parts:
 
 1. tag: string
 2. attributes: key-value pairs
 3. content: array of tags or texts
 
-[CDATA](https://zh.wikipedia.org/zh-tw/CDATA) is not considered in this project.
+Though XML has same features, [CDATA](https://zh.wikipedia.org/zh-tw/CDATA) is not considered in this project.
 
 
 ### Phase 1: simple
@@ -199,7 +199,7 @@ Nice! Now the notation is short and like the HTML code it represents.
 
 Let's use another property name `"$"` to represent children. This have the following pros:
 1. shorter in JSON
-2. no need to be quoted in JS as a object property name
+2. no need to be quoted in JS as an object property name
 3. there would not have conflict with any attribute name (since it's illegal in XML to use this character in attribute name).
 
 ```js
@@ -370,8 +370,8 @@ Each has its ways to be assigned:
   Both single string and array of strings are supported.
   If using single string form, each CSS class shall be *seperated by space*.
 * CSS styles:
-  It's ok to assign properties list as a string (each property-value pair *seperated by comma*, like `style` attribute in HTML), with each property name in *kebab-case*;
-  but if you wanna assign it as an object, property name shall be in *lowerCamelCase*.
+  It's ok to assign properties list as a string (each property-value pair *seperated by semicolon*, like `style` attribute in HTML), with each property name in *kebab-case*;
+  but if you wanna assign it as an object, property names shall be in *lowerCamelCase*.
 * Dataset:
   As it's shown in the above example, assigning data as an attribute is allowed with the property name in `kebab-case`;
   and assigning it through an object is also supported, but with property name in *lowerCamelCase*.
@@ -386,7 +386,7 @@ Each has its ways to be assigned:
 And since these implementation is only for HTML, the worry about conflict between object property name and XML attribute is ignored.
 Therefore, the final code still recognize `"tag"`, `"children"`, `"text"` and does not treat them as HTML attributes.
 
-See `index.js` for actual code.
+See [`index.js`](index.js) for actual code.
 
 ## parse DOM to JSON
 TBE

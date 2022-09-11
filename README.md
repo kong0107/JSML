@@ -36,7 +36,7 @@ For ideas of this format and even shorter implementation, see [context](context.
 
 ### in node.js
 
-Use `jsdom` to create an object which emulate `HTMLDocument`.
+Use `jsdom` to create an object which emulates `HTMLDocument`.
 
 ```bash
 npm install --save jsml-parser jsdom
