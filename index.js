@@ -10,12 +10,14 @@ const JSML = (() => {
  */
 function createElement(jsml, document = window.document) {
     if(typeof jsml === "string") return document.createTextNode(jsml);
+    if(jsml.cloneNode) return jsml.cloneNode(true);
     let tag = jsml.tag;
     if(!tag) {
         tag = Object.keys(jsml)[0];
         if(!tag) throw TypeError("object does not match JsonElement structure.");
         jsml = jsml[tag];
     }
+    else delete jsml.tag;
     const elem = document.createElement(tag);
     if(typeof jsml === "string") jsml = {text: jsml};
     for(let prop in jsml) {
@@ -124,7 +126,7 @@ if(typeof module === "object" && module.exports) module.exports = JSML;
 /******** Definitions ********/
 
 /**
- * @typedef {Object | string} JsonElementCore
+ * @typedef {Object | Node | string} JsonElementCore
  * @property {string} [tag] - HTML tag. Only omittable if using `JsonElement`.
  * @property {JsonElement[]} [children]
  * @property {string} [text] - use this only if the only child is text.

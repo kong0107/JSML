@@ -31,7 +31,7 @@
 </script>
 ```
 
-For ideas of this format and even shorter implementation, see [context](context.md).
+For ideas of this format and concept of even shorter implementation, see [context](context.md).
 
 
 ### in node.js
