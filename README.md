@@ -53,6 +53,15 @@ const elem = JSML.createElement(
 );
 ```
 
+### to HTML string
+
+```js
+/// returns "<p>test</p>"
+JSML.toHTML({p: "test"});
+```
+
+Note: For `toHTML()`, assigning event listener by function is not fully implemented yet.
+
 
 ## See also
 
