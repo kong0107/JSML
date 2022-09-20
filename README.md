@@ -3,12 +3,14 @@
 **JS**ON that represents HT**ML**
 **J**ava**S**cript object notation that represents hypertext **M**arkup **L**anguage
 
-## Usage
+[See demonstration on GitHub.](https://kong0107.github.io/jsml/)
+
+## createElement()
 
 ### in browsers
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/jsml-parser/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsml-parser@0.2/src/createElement.js"></script>
 <script>
     const jsml =
     {p: {
@@ -39,7 +41,7 @@ For ideas of this format and concept of even shorter implementation, see [contex
 Use `jsdom` to create an object which emulates `HTMLDocument`.
 
 ```bash
-npm install --save jsml-parser jsdom
+npm install jsml-parser jsdom
 ```
 
 ```js
@@ -53,15 +55,31 @@ const elem = JSML.createElement(
 );
 ```
 
-### to HTML string
+## toHTML()
 
-```js
-/// returns "<p>test</p>"
-JSML.toHTML({p: "test"});
+*Note*: For `toHTML()`, assigning event listener by function is not fully implemented yet.
+
+### in browsers
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/jsml-parser@0.2/src/toHTML.js"></script>
+<script>
+console.log(JSML.toHTML({p: "test"}));
+</script>
 ```
 
-Note: For `toHTML()`, assigning event listener by function is not fully implemented yet.
+### in node.js
 
+You don't need other packages to run `toHTML()`.
+
+```bash
+npm install jsml-parser
+```
+
+```js
+const JSML = require("jsml-parser");
+console.log(JSML.toHTML({p: "test"}));
+```
 
 ## See also
 

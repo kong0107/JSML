@@ -1,6 +1,6 @@
 {
   "name": "jsml-parser",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "JSON that represents HTML",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/kong0107/jsml/issues"
   },
-  "homepage": "https://github.com/kong0107/jsml#readme",
+  "homepage": "https://kong0107.github.io/jsml/",
   "devDependencies": {
     "jsdom": "^20.0.0"
   }

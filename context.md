@@ -4,7 +4,7 @@ While developing a browser extension,
 to transfer serializable data (through [message passing](https://developer.chrome.com/docs/extensions/mv3/messaging/)) that would later be created into DOM without `Element.innerHTML`,
 I came up with this project.
 
-Consider to construct a HTML element:
+Consider to construct an HTML element:
 
 ```html
 <a id="myLink" href="#" title="the title">foo<em>bar</em>2000</a>
@@ -303,7 +303,7 @@ However, this may confuse people who do not know such meaning.
 
 ### Phase 5: special attributes
 
-Consider a HTML element:
+Consider an HTML element:
 
 ```html
 <button

@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JSML: JSON that represents HTML</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="index.js"></script>
+<script src="./src/createElement.js"></script>
+<script src="./src/toHTML.js"></script>
 <style>
     #textarea {
         max-height: 60vh;
@@ -67,9 +68,15 @@
         <h2>Element created</h2>
         <div id="element">B</div>
     </section>
-    <section class="col-lg-4 mb-4">
-        <h2>HTML</h2>
-        <code id="html" class="d-block font-monospace">C</code>
+    <section class="col-lg-4 mb-4 d-flex flex-column">
+        <div class="mb-4">
+            <h2>outerHTML</h2>
+            <code id="outerHTML" class="d-block font-monospace">C</code>
+        </div>
+        <div class="mb-4">
+            <h2>toHTML()</h2>
+            <code id="toHTML" class="d-block font-monospace">D</code>
+        </div>
     </section>
 </main>
 <footer class="d-flex justify-content-between">
@@ -77,21 +84,23 @@
     <p><a href="https://github.com/kong0107/jsml">source code</a></p>
 </footer>
 <script>
-["textarea", "statusx", "element", "html"]
+["textarea", "statusx", "element", "outerHTML", "toHTML"]
 .map(id => window[id] = document.getElementById(id));
 
 textarea.addEventListener("input", event => {
     textarea.style.height = (textarea.value.split(/\n/).length * 1.5 + .5) + "em";
     while(element.lastChild?.remove());
     statusx.lastChild?.remove();
-    html.lastChild?.remove();
+    outerHTML.lastChild?.remove();
+    toHTML.lastChild?.remove();
     try {
         const obj = Function(`return (${event.target.value});`)();
         const elem = JSML.createElement(obj);
         console.debug(elem);
         if(!elem) return;
         element.append(elem);
-        html.textContent = elem.outerHTML;
+        outerHTML.textContent = elem.outerHTML;
+        toHTML.textContent = JSML.toHTML(obj);
     }
     catch(err) {
         statusx.textContent = err;

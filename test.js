@@ -1,5 +1,6 @@
 const {JSDOM} = require("jsdom");
-const JSML = require("./index");
+// const {createElement} = require("./index");
+const createElement = require("./src/createElement.js");
 
 const document = (new JSDOM()).window.document;
 const jsml =
@@ -19,5 +20,5 @@ const jsml =
     }}
 ;
 
-const elem = JSML.createElement(jsml, document);
+const elem = createElement(jsml, document);
 console.log(elem.outerHTML);
