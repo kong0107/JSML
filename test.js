@@ -1,6 +1,6 @@
 const {JSDOM} = require("jsdom");
 // const {createElement} = require("./index");
-const createElement = require("./src/createElement.js");
+const createElement = require("./createElement.js");
 
 const document = (new JSDOM()).window.document;
 const jsml =

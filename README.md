@@ -10,7 +10,7 @@
 ### in browsers
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/jsml-parser@0.2/src/createElement.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsml-parser@0.2/createElement.js"></script>
 <script>
     const jsml =
     {p: {
@@ -62,7 +62,7 @@ const elem = JSML.createElement(
 ### in browsers
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/jsml-parser@0.2/src/toHTML.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsml-parser@0.2/toHTML.js"></script>
 <script>
 console.log(JSML.toHTML({p: "test"}));
 </script>
