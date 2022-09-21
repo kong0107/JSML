@@ -1,5 +1,5 @@
 /** @module JSML */
-((root = globalThis) => {
+(root => {
 
 /**
  * @func createElement
@@ -111,7 +111,7 @@ else {
     root.JSML.createElement = createElement;
 }
 
-})(this);
+})(globalThis);
 
 
 /**
