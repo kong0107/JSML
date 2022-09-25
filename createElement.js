@@ -4,13 +4,14 @@
 /**
  * @func createElement
  * @desc Create HTML Element from a serializable object.
- * @param {JsonElement} jsml
+ * @param {JsonElement | JsonElement[]} jsml
  * @param {HTMLDocument} [document=window.document] - you could use `jsdom`
  * @returns {Element}
  */
 function createElement(jsml, document) {
     if(typeof document !== "object") document = root.document; //< example: someJsmlObjArray.map(createElement)
     if(typeof jsml === "string") return document.createTextNode(jsml);
+    if(jsml instanceof Array) return jsml.map(e => createElement(e, document));
     if(jsml.cloneNode) return jsml.cloneNode(true);
 
     let tag = jsml.tag;
@@ -100,7 +101,7 @@ const camelize = kebab => kebab.replace(/-([a-z])/g, m => m[1].toUpperCase());
  * — most handlers receive only one `event` parameter,
  * while `onerror` receives five: `event`, `source`, `lineno`, `colno`, `error`.
  */
- const toFunc = (any, name = "anonymous") => (any instanceof Function) ? any : (
+const toFunc = (any, name = "anonymous") => (any instanceof Function) ? any : (
     Function(`return function ${name}(event) { ${any} }`)()
 );
 

@@ -105,4 +105,4 @@ else {
     root.JSML.toHTML = toHTML;
 }
 
-})(this);
+})(globalThis);
