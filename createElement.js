@@ -20,7 +20,6 @@ function createElement(jsml, document) {
         if(!tag) throw TypeError("object does not match JsonElement structure.");
         jsml = jsml[tag];
     }
-    else delete jsml.tag;
     const elem = document.createElement(tag);
 
     if(typeof jsml === "string") jsml = {text: jsml};
@@ -73,6 +72,7 @@ function createElement(jsml, document) {
                     elem.addEventListener(event, toFunc(value[event], `on${event}`));
                 break;
             }
+            case "tag": break;
             default: { // value: string
                 console.assert(typeof value === "string", new TypeError("attribute value must be a string"));
                 elem.setAttribute(prop, value);
